@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Create and append the span with the correct answer
         const correctAnswerSpan = document.createElement('span');
-        correctAnswerSpan.classList.add('answer-span', 'rounded-lg', 'bg-[#00ff00]', 'w-6', 'text-center', 'font-bold');
+        correctAnswerSpan.classList.add('answer-span', 'rounded-lg', 'w-6', 'text-center', 'font-bold');
         correctAnswerSpan.textContent = showCorrectCount ? (correctAnswers[i] || ' ') : '';
         form.appendChild(correctAnswerSpan);
 
