@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const holder = document.getElementById('holder');
     const toggleCorrectButton = document.getElementById('toggle-correct');
     const highlightQuestionsButton = document.getElementById('highlight-questions');
+    const clearAnswersButton = document.getElementById('clear-answers');
     let correctAnswers = JSON.parse(localStorage.getItem('correctAnswers')) || {};
     let answeredCount = 0;
     let correctCount = 0;
@@ -25,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let i = 1; i <= 90; i++) {
         const form = document.createElement('form');
         form.id = `question-${i}`;
-        form.classList.add('flex', 'gap-2');
+        form.classList.add('flex', 'gap-2', 'items-center', 'px-4'); // Added 'items-center' to align items properly
 
         const h4 = document.createElement('h4');
         h4.classList.add('p-2');
@@ -59,12 +60,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateAnswers();
                 updateCounter();
                 saveAnswers();
+
+                if(highlighting) {
+                    highlightQuestions();
+                }
             });
 
             label.appendChild(p);
             label.appendChild(checkbox);
             form.appendChild(label);
         });
+
+        // Create and append the span with the correct answer
+        const correctAnswerSpan = document.createElement('span');
+        correctAnswerSpan.classList.add('answer-span', 'rounded-lg', 'bg-[#00ff00]', 'w-6', 'text-center', 'font-bold');
+        correctAnswerSpan.textContent = showCorrectCount ? (correctAnswers[i] || ' ') : '';
+        form.appendChild(correctAnswerSpan);
 
         holder.appendChild(form);
     }
@@ -123,11 +134,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function toggleCorrectAnswers() {
         showCorrectCount = !showCorrectCount;
-        if (showCorrectCount) {
-            toggleCorrectButton.textContent = 'Esconder Correto';
-        } else {
-            toggleCorrectButton.textContent = 'Mostrar Correto';
-        }
+        toggleCorrectButton.textContent = showCorrectCount ? 'Esconder Correto' : 'Mostrar Correto';
+
+        // Update the display of correct answer spans
+        const spans = document.querySelectorAll('form span.answer-span');
+        spans.forEach(span => {
+            const questionId = parseInt(span.parentElement.id.split('-')[1]);
+            span.textContent = showCorrectCount ? (correctAnswers[questionId] || ' ') : '';
+        });
+
         updateCounter();
     }
 
@@ -151,8 +166,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     const correctOption = correctAnswers[i];
                     if (selected.value === correctOption) {
                         form.style.backgroundColor = 'lime';
-                    } else {
+                    } else if(correctOption !== undefined){
                         form.style.backgroundColor = 'tomato';
+                    } else {
+                        form.style.backgroundColor = 'gray';
                     }
                     form.style.borderRadius = '6px';
                 }
@@ -160,12 +177,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function clearAnswers() {
+        localStorage.removeItem('answers');
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        updateAnswers();
+        updateCounter();
+
+        highlighting = true;
+        toggleHighlightQuestions();
+    }
+
     function removeHighlights() {
         for (let i = 1; i <= 90; i++) {
             const form = document.getElementById(`question-${i}`);
             if (form) {
                 form.style.backgroundColor = '';
-                form.style.borderRadius = '';
             }
         }
     }
@@ -176,6 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Attach event listeners to buttons
     toggleCorrectButton.addEventListener('click', toggleCorrectAnswers);
     highlightQuestionsButton.addEventListener('click', toggleHighlightQuestions);
+    clearAnswersButton.addEventListener('click', clearAnswers);
 
     // Initial update to fill in counter
     updateAnswers();

@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const holder = document.getElementById('holder');
     holder.innerHTML = ''; // Clear any existing content
 
+    const clearCorrectButton = document.getElementById('clear-correct');
     let correctAnswers = JSON.parse(localStorage.getItem('correctAnswers')) || {};
 
     // Create 90 question forms for setting correct answers
@@ -62,7 +63,16 @@ document.addEventListener('DOMContentLoaded', () => {
         holder.appendChild(form);
     }
 
+    function clearCorrectAnswers() {
+        localStorage.removeItem('correctAnswers');
+        holder.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+        alert('Respostas corretas limpas!');
+    }
+
     function saveCorrectAnswersToLocalStorage(answers) {
         localStorage.setItem('correctAnswers', JSON.stringify(answers));
     }
+
+    // Add event listener for the clear button
+    clearCorrectButton.addEventListener('click', clearCorrectAnswers);
 });
