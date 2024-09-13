@@ -4,7 +4,7 @@ html{
 
 .float-button {
     position: fixed;
-    top: 10px;
+    bottom: 10px;
     left: 10px;
     background-color: #f8f8f8;
     padding: 10px;
