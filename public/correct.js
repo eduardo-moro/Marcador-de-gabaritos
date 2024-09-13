@@ -66,7 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function clearCorrectAnswers() {
         localStorage.removeItem('correctAnswers');
         holder.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-        alert('Respostas corretas limpas!');
     }
 
     function saveCorrectAnswersToLocalStorage(answers) {
