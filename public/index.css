@@ -1,0 +1,14 @@
+html{
+    user-select: none;
+}
+
+.float-button {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background-color: #f8f8f8;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
